@@ -2,7 +2,7 @@ import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import plotly.express as px
 
 from app import app
@@ -73,7 +73,7 @@ df = pd.DataFrame()
 aa =[[1.916045,113.130924, 'Kapit, Sarawak'],[6.177620,116.975330,'Beluran, Sabah'],[-1.288079, 131.249800,'Salawati, Indonesia'],[4.809317, 103.145713,'Jerangou Terengganu']]
 
 for lat,lon, loc in aa:
-  a = requests.get('https://api.darksky.net/forecast/dc757f87dbdcb50907cdcecf02328582/' + str(lat)+ ',' + str(lon) +'?extend=hourly')
+  a = requests.get('https://api.darksky.net/forecast/322da9f437b1767029b90e4aa3da5a07/' + str(lat)+ ',' + str(lon) +'?extend=hourly')
   a= a.json()
   di = a['currently']
   aa = a['hourly']['data']

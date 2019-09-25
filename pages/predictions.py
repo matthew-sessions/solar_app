@@ -32,8 +32,7 @@ column2 = html.Div([
     ],style={'margin':'auto','width':600,'height':250})
 
 
-col3 = dbc.Row([
-    html.Div(id='output-state')])
+col3 = html.Div(id='output-state', style={'width':'100%'})
 
 
 @app.callback(Output('output-state', 'children'),
@@ -61,7 +60,7 @@ def update_output(n_clicks, input1, input2):
       return(str(mixx[3]) + ':00')
 
 
-    a = requests.get('https://api.darksky.net/forecast/dc757f87dbdcb50907cdcecf02328582/' + str(lat)+ ',' + str(lon) +'?extend=hourly')
+    a = requests.get('https://api.darksky.net/forecast/322da9f437b1767029b90e4aa3da5a07/' + str(lat)+ ',' + str(lon) +'?extend=hourly')
     a= a.json()
     location = a['timezone']
     aa = a['hourly']['data']
@@ -114,7 +113,7 @@ def update_output(n_clicks, input1, input2):
     try: df
     except NameError: df = pd.DataFrame([['0',0,'Enter Longitude & Latitude to see data']],columns=['TIME','GHI Level','Location'])
 
-    fig = px.line(df, x="TIME", y="GHI Level", title='24 Hour GHI Level',color='Location')
+    fig = px.line(df, x="TIME", y="GHI Level", title='24 Hour GHI Level',color='Location',height=400)
     fig.update_layout(showlegend=False)
 
 
@@ -126,7 +125,7 @@ def update_output(n_clicks, input1, input2):
         domain = {'x': [0, 1], 'y': [0, 1]}, 
         value = float(current['Current GHI Level']), 
         mode = "gauge+number+delta",
-        title = {'text': "Current GHI level in " + str(current['Location'].values[0])},
+        title = {'text': "Current GHI level"},
         delta = {'reference': 450}, 
         gauge = {'axis': {'range': [None, 1200]},
                  'bar': {'color':'darkblue'},
@@ -136,7 +135,7 @@ def update_output(n_clicks, input1, input2):
                  'threshold' : {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': 1100}}))
 
 
-    fig3 = px.scatter_mapbox(current, lat="lat", lon="lon", hover_name='Location',hover_data=['Current GHI Level'], zoom=3)
+    fig3 = px.scatter_mapbox(current, lat="lat", lon="lon", hover_name='Location',hover_data=['Current GHI Level'], zoom=3,height=250)
     fig3.update_layout(
         mapbox_style="white-bg",
         mapbox_layers=[
@@ -148,21 +147,32 @@ def update_output(n_clicks, input1, input2):
                 ]
             }
           ])
-
-
-
+    fig3.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
     #fig3.update_layout(margin={"r":0,"t":25,"l":0,"b":0}) 
 
-    coll = dbc.Col(
-        [
-            dcc.Graph(figure=fig2),dcc.Graph(figure=fig),dcc.Graph(figure=fig3)
+    coll = dbc.Container([
+        dbc.Row([
+            dbc.Col([dcc.Graph(figure=fig)]),
+            dbc.Col([html.H4('Forcast Overview:')])
+        ],style={'height':350,'margin':'auto'}),
+        dbc.Row([
+            dbc.Col([dcc.Graph(figure=fig2)]),
+            dbc.Col([dcc.Graph(figure=fig3)],style={'margin':'auto'})
+        ])
+        ])
+       
 
-        ]
-    )
 
     return(coll)
 
+
+"""
+    html.Div([
+        html.Div([dcc.Graph(figure=fig2)],style={'max-width':'40%','margin':'auto'}),
+        html.Div([dcc.Graph(figure=fig)],style={'width':'60%','margin':'auto'})
+        ], style={'display':'flex','flex-wrap':'wrap','margin':'auto'})
+"""
 
 layout = dbc.Row([column2])
 layout2 = dbc.Row([col3])
