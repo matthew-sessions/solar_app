@@ -51,15 +51,8 @@ column1 = dbc.Col(
     md=4,
 )
 loaded_model = load('assets/pipeline.joblib')
-lat, lon = 1.999140,112.940784
+
 features = ['zen', 'temperature', 'summary','pressure','visibility','uvIndex','dewPoint']
-a = requests.get('https://api.darksky.net/forecast/dc757f87dbdcb50907cdcecf02328582/' + str(lat)+ ',' + str(lon) +'?extend=hourly')
-a= a.json()
-a = a['hourly']['data']
-
-df = pd.DataFrame(a)
-
-tr = df['time'].values
 
 def zen(time,lat,lon):
   from datetime import datetime
@@ -75,29 +68,48 @@ def tim(time):
   mixx = mix.split(',')
   return(str(mixx[3]) + ':00')
 
+df = pd.DataFrame()
+
+aa =[[1.916045,113.130924, 'Kapit, Sarawak'],[6.177620,116.975330,'Beluran, Sabah'],[-1.288079, 131.249800,'Salawati, Indonesia'],[4.809317, 103.145713,'Jerangou Terengganu']]
+
+for lat,lon, loc in aa:
+  a = requests.get('https://api.darksky.net/forecast/dc757f87dbdcb50907cdcecf02328582/' + str(lat)+ ',' + str(lon) +'?extend=hourly')
+  a= a.json()
+  di = a['currently']
+  aa = a['hourly']['data']
+  data = pd.DataFrame(aa)
+  data = data.head(24)
+  data['lat'] = [lat] * len(data)
+  data['lon'] = [lon] * len(data)
+  data['Location'] = [loc] * len(data)
+  df = df.append(data, ignore_index=True)
+
+
 df['TIME'] = df.time.apply(tim)
 
-zenith = []
-for i in tr:
-  zed = zen(i, lat, lon)
-  zenith.append(zed)
 
+zenith = []
+for i in df[['time','lat','lon']].values:
+  zenith.append(zen(int(i[0]),i[1],i[2]))
+
+ 
+  
 df['zen'] = zenith
 
 res = loaded_model.predict(df[features])
 df['GHI Level'] = res
 
-gapminder = df.head(24)
-fig = px.line(gapminder, x="TIME", y="GHI Level", title='24 Hour GHI Level',height=300)
 
+df['GHI Level'] = res
+fig = px.line(df, x="TIME", y="GHI Level", title='24 Hour GHI Level',height=300,color='Location')
+fig.update_layout(showlegend=False)
 fig.update_layout(
     margin=dict(l=20, r=20, t=25, b=20)
 )
 
 
-location = pd.DataFrame([[1.999140,112.940784, 'Kapit, Malaysia']], columns=['lat','lon','City'])
-fig2 = px.scatter_mapbox(location, lat="lat", lon="lon", hover_name="City",
-                        color_discrete_sequence=["fuchsia"], zoom=3, height=300)
+fig2 = px.scatter_mapbox(df, lat="lat", lon="lon", hover_name="Location",
+                        color_discrete_sequence=["fuchsia"], zoom=3,height=300)
 fig2.update_layout(
     mapbox_style="white-bg",
     mapbox_layers=[
@@ -109,6 +121,7 @@ fig2.update_layout(
             ]
         }
       ])
+
 fig2.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 column2 = dbc.Col(
     [

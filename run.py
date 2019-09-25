@@ -74,7 +74,7 @@ def display_page(pathname):
     if pathname == '/':
         return index.layout
     elif pathname == '/predictions':
-        return predictions.layout
+        return predictions.layout,predictions.layout2
     elif pathname == '/insights':
         return insights.layout
     elif pathname == '/process':
