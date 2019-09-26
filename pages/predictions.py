@@ -163,9 +163,9 @@ def update_output(n_clicks, input1, input2):
         ], style={'marginTop':60}
     )
     coll = dbc.Container([
-        html.Div([
+        html.Div([html.Br(),
             dcc.Graph(figure=fig)
-            ],style={'marginTop':40}),
+            ],style={'marginTop':50}),
         html.Div([
                 html.Br(),
                 html.H4('Forcast Overview:'),
