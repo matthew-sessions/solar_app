@@ -104,7 +104,7 @@ df['GHI Level'] = res
 fig = px.line(df, x="TIME", y="GHI Level", title='24 Hour GHI Level',height=300,color='Location')
 fig.update_layout(showlegend=False)
 fig.update_layout(
-    margin=dict(l=20, r=20, t=25, b=20)
+    margin=dict(l=20, r=20, t=65, b=40)
 )
 
 
