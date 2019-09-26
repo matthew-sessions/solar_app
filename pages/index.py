@@ -33,20 +33,12 @@ the content.
 
 column1 = dbc.Col(
     [
-        dcc.Markdown(
-            """
-        
-            ## Value Proposition
-
-            Emphasize how the app will benefit users. Don't emphasize the underlying technology.
-
-            ✅ RUN is a running app that adapts to your fitness levels and designs personalized workouts to help you improve your running.
-
-            ❌ RUN is the only intelligent running app that uses sophisticated deep neural net machine learning to make your run smarter because we believe in ML driven workouts.
-
-            """
-        ),
-        dcc.Link(dbc.Button('Call To Action', color='primary'), href='/predictions')
+        html.Br([]),
+        html.H4(["Solar Irradiance Predictions"]),
+        html.P(['There are many small communities in Southeast Asia that do not have access to grid power. Solar energy is a valid alternative for these communities, however, due to technological and logistic hurdles, solar technology has yet to be implemented at scale.']),
+        html.P(['This application forecasts the Global Horizontal Irradiance levels (GHI)‌ for four specific villages in Malaysia and Indonesia that could potentially transition to solar energy. ']),
+        html.P(['Click create “Create Forcast” below to see the GHI‌ forcast of any given location around the Globe!']),
+        dcc.Link(dbc.Button('Create Forcast', color='primary'), href='/predictions')
     ],
     md=4,
 )
