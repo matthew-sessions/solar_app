@@ -150,7 +150,18 @@ def update_output(n_clicks, input1, input2):
     fig3.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
     #fig3.update_layout(margin={"r":0,"t":25,"l":0,"b":0}) 
+    firstcol = dbc.Col(
+        [
+            dcc.Graph(figure=fig2)
 
+        ],style={'marginBottom':20}
+    )    
+    seccol = dbc.Col(
+        [
+            dcc.Graph(figure=fig3)
+
+        ], style={'marginTop':60}
+    )
     coll = dbc.Container([
         html.Div([
             dcc.Graph(figure=fig)
@@ -161,10 +172,7 @@ def update_output(n_clicks, input1, input2):
                 html.P('This application accepts coordinates and proceeds to pull corresponding weather data from the Darksky API. The data is then formated into a tabular data frame and is prepared to be rendered by a Random Forest model. The Random Forest model uses the Zenith angle and multiple weather features to predict the Global Horizontal Irradiance (GHI) level 24 hours into the future. This model was trained on over 500,000 weather observations from various locations around the globe and has an R² Score of 0.92.'),
                 html.I('GHI‌ directly corresponds with solar output potential, thus this app will give solar power users future insight as to how much energy their panels will produce.')            
             ]),
-        dbc.Row([
-            dbc.Col([dcc.Graph(figure=fig2)],style={'margin':'auto','textAlign':'center'}),
-            dbc.Col([html.Br(),dcc.Graph(figure=fig3)],style={'marginTop':35})
-        ])        
+        dbc.Row([firstcol,seccol])       
         ])
 
 
