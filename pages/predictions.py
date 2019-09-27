@@ -44,7 +44,7 @@ def update_output(n_clicks, input1, input2):
     lon = input2
     loaded_model = load('assets/pipeline.joblib')
     features = ['zen', 'temperature', 'summary','pressure','visibility','uvIndex','dewPoint']
-
+#function to wrangle the data and add the zenith angle
     def zen(time,lat,lon):
       from datetime import datetime
       mix = datetime.fromtimestamp(time).strftime('%Y,%m,%d,%H')
@@ -59,7 +59,7 @@ def update_output(n_clicks, input1, input2):
       mixx = mix.split(',')
       return(str(mixx[3]) + ':00')
 
-
+#collect the data for the model
     a = requests.get('https://api.darksky.net/forecast/322da9f437b1767029b90e4aa3da5a07/' + str(lat)+ ',' + str(lon) +'?extend=hourly')
     a= a.json()
     location = a['timezone']
@@ -109,7 +109,7 @@ def update_output(n_clicks, input1, input2):
     res = loaded_model.predict(df[features])
     df['GHI Level'] = res
 
-
+#make sure the dataframe is correct
     try: df
     except NameError: df = pd.DataFrame([['0',0,'Enter Longitude & Latitude to see data']],columns=['TIME','GHI Level','Location'])
 
@@ -120,7 +120,7 @@ def update_output(n_clicks, input1, input2):
     try: current
     except NameError: current = pd.DataFrame([[0,'No current location',None,None]],columns=['Current GHI Level','Location','lat',"lon"])
 
-
+#created the figures
     fig2 = go.Figure(go.Indicator(
         domain = {'x': [0, 1], 'y': [0, 1]}, 
         value = float(current['Current GHI Level']), 
