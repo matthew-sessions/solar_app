@@ -516,3 +516,4 @@ How does Heroku know what to do? Because of these files in the repo:
 - `requirements.txt` tells Heroku what libraries & versions to install
 - `Procfile` tells Heroku what command to run
 - `.slugignore` tells Heroku what files to ignore
+"# solar-app" 
